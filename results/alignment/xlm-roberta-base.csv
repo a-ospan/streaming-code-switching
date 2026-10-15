@@ -1,0 +1,17 @@
+strata,valid_share,straddle,retokenized,truncated,switch_lost,unk_rate,subwords_per_word
+Arabic-English,1.0,0.0,0.0,0.0,0.0,0.0,1.5584
+Cantonese-English,0.7955,0.1938,0.0107,0.0,0.0,0.0,1.0305
+Chinese-English,0.6892,0.2891,0.0216,0.0,0.0,0.0,0.8868
+French-English,1.0,0.0,0.0,0.0,0.0,0.0,1.468
+German-English,1.0,0.0,0.0,0.0,0.0,0.0,1.4155
+German-French,0.9994,0.0,0.0006,0.0,0.0,0.0,1.5033
+Hindi-English (Devanagari),0.9992,0.0004,0.0004,0.0,0.0,0.0,1.3437
+Hindi-English (romanized),0.9994,0.0002,0.0004,0.0,0.0,0.0,1.4166
+Italian-English,0.9996,0.0004,0.0,0.0,0.0,0.0,1.3931
+Japanese-English,0.7839,0.1975,0.0185,0.0,0.0,0.0,1.1709
+Korean-English,0.9992,0.0003,0.0005,0.0,0.0,0.0,1.7232
+Malay-English,0.9996,0.0004,0.0,0.0,0.0,0.0,1.3331
+Philippines-English,0.9996,0.0004,0.0,0.0,0.0,0.0,1.4363
+Russian-English,0.9993,0.0002,0.0005,0.0,0.0,0.0,1.5105
+Spanish-English,0.9996,0.0002,0.0002,0.0,0.0,0.0,1.3581
+Vietnamese-English,0.9995,0.0,0.0005,0.0,0.0,0.0,1.1981

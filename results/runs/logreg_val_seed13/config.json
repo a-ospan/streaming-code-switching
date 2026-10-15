@@ -1,0 +1,21 @@
+{
+  "seed": 13,
+  "train_per_strata": 3000,
+  "eval_split": "val",
+  "train_positions": 838452,
+  "eval_positions": 1817018,
+  "model": "logreg",
+  "threshold": 0.22526642680168152,
+  "features": [
+    "cur_is_lang2",
+    "run_bucket",
+    "switches_bucket",
+    "pos_bucket",
+    "punct_comma",
+    "punct_final",
+    "punct_other",
+    "script",
+    "strata",
+    "strata_x_lang"
+  ]
+}

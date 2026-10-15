@@ -1,0 +1,11 @@
+{
+  "seed": 13,
+  "fractions": {
+    "train": 0.8,
+    "val": 0.1,
+    "test": 0.1
+  },
+  "unit": "source row",
+  "strata": "language pair, Hindi-English split by script",
+  "duplicates": "rows sharing a sentence text stay in one split"
+}
