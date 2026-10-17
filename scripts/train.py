@@ -63,7 +63,9 @@ def load_split(split: str, per_strata: int | None, seed: int) -> pd.DataFrame:
     if per_strata is None:
         return pd.read_parquet(PROCESSED, columns=COLUMNS, filters=filters)
     keys = pd.read_parquet(PROCESSED, columns=["row_id", "sent_idx", "strata"], filters=filters)
-    picked = keys.groupby("strata").sample(per_strata, random_state=seed)[["row_id", "sent_idx"]]
+    # Up to per_strata sentences each: shuffle once, keep the first n of every stratum. Small strata
+    # (Devanagari Hindi has about 1,160 val sentences) are used whole instead of raising an error.
+    picked = keys.sample(frac=1, random_state=seed).groupby("strata").head(per_strata)[["row_id", "sent_idx"]]
     df = pd.read_parquet(PROCESSED, columns=COLUMNS, filters=filters + [("row_id", "in", sorted(set(picked.row_id)))])
     return df.merge(picked, on=["row_id", "sent_idx"]).reset_index(drop=True)
 
