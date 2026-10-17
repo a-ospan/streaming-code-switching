@@ -16,6 +16,9 @@ from dataclasses import dataclass
 import pandas as pd
 
 DATASET_ID = "Shelton1013/SwitchLingua_text"
+# Pinned dataset version. The splits in results/splits identify rows by position, so every
+# machine must load the same version in the same order. Change only together with new splits.
+DATASET_REVISION = "6e048d27e3b2cb3a7a926288d4915745a0ab2801"
 
 # Dict keys that hold metadata, not utterance text.
 METADATA_KEYS = {"topic", "speaker", "role", "name", "id", "turn"}
@@ -44,7 +47,7 @@ def load_raw_dataset(columns: list[str] | None = None):
     os.environ.setdefault("HF_DATASETS_OFFLINE", "1")
     from datasets import load_dataset
 
-    ds = load_dataset(DATASET_ID, split="train")
+    ds = load_dataset(DATASET_ID, split="train", revision=DATASET_REVISION)
     ds = ds.select_columns(columns or META_COLUMNS + ["data_generation_result"])
     return ds.add_column("row_id", list(range(len(ds))))
 
