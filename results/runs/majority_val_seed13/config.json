@@ -1,0 +1,10 @@
+{
+  "seed": 13,
+  "train_per_strata": 3000,
+  "eval_split": "val",
+  "train_positions": 838452,
+  "eval_positions": 1817018,
+  "model": "majority",
+  "train_switch_rate": 0.11166888504052706,
+  "dur_class": 0
+}

@@ -1,3 +1,53 @@
+# ---------------------------------------------
+# SwitchLingua project .gitignore
+# ---------------------------------------------
+
+# Downloaded dataset and processed data
+data/
+datasets/
+*.arrow
+*.parquet
+
+# Hugging Face cache (if pointed inside the project)
+.cache/
+hf_cache/
+
+# Model checkpoints and training outputs
+checkpoints/
+models/
+/runs/
+outputs/
+wandb/
+lightning_logs/
+*.pt
+*.pth
+*.ckpt
+*.bin
+*.safetensors
+*.joblib
+*.pkl
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Environment and secrets
+.env
+.venv/
+
+# Editor and OS files
+.vscode/
+.idea/
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# ---------------------------------------------
+# GitHub Python template (from the team repo)
+# ---------------------------------------------
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]

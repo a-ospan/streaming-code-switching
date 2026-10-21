@@ -1,0 +1,18 @@
+{
+  "macro_sw_precision": 0.0,
+  "macro_sw_recall": 0.0,
+  "macro_sw_f1": 0.0,
+  "macro_sw_pr_auc": 0.11391689338601221,
+  "macro_sw_accuracy": 0.8860831066139878,
+  "macro_dur_accuracy": 0.44137008944757633,
+  "macro_dur_macro_f1": 0.2021732467608992,
+  "sigma_universality_sw_f1": 0.0,
+  "sigma_universality_dur_macro_f1": 0.029358144435163526,
+  "pooled_sw_precision": 0.0,
+  "pooled_sw_recall": 0.0,
+  "pooled_sw_f1": 0.0,
+  "pooled_sw_pr_auc": 0.08125180928312213,
+  "pooled_sw_accuracy": 0.9187481907168779,
+  "pooled_sw_positive_rate": 0.08125180928312213,
+  "pooled_n_positions": 1817018
+}
