@@ -268,3 +268,11 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# LaTeX build files (keep the .tex source and the named report PDF)
+reports/update1_acm/*.aux
+reports/update1_acm/*.log
+reports/update1_acm/*.bbl
+reports/update1_acm/*.blg
+reports/update1_acm/*.out
+reports/update1_acm/main.pdf
