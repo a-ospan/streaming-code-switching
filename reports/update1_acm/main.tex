@@ -110,8 +110,10 @@ non-Chinese character arrives, and 85\% of the Cantonese runs that end glued to 
 Punctuation is not a token; it is kept as context for the preceding token.
 
 \textbf{Token-level language ID.} The corpus gives only each row's two languages, so we tag every token with
-three rules: (1) script, when the two languages use different scripts; (2) word frequency from the
-\texttt{wordfreq} lists, for Latin-script pairs; (3) context, where undecided tokens (names, numbers, words
+three rules: (1) script, when the two languages use different scripts; (2) for Latin-script pairs, word
+frequency from the \texttt{wordfreq} library~\cite{speer2022wordfreq}, an offline snapshot (up to about 2021)
+of Wikipedia, subtitle, news, book, web and social-media text: a word goes to the language where its Zipf
+frequency is at least 0.3 higher; (3) context, where undecided tokens (names, numbers, words
 shared by both languages) take the nearest decided neighbor's language. 56\% of Hindi--English rows are
 romanized, so we built a romanized-Hindi lexicon (1,056 words) from the corpus itself, using the Latin words
 in Devanagari rows as the English reference. Hindi is therefore reported as two strata, giving 16 evaluation
