@@ -3,6 +3,8 @@
 \renewcommand\footnotetextcopyrightpermission[1]{}
 \pagestyle{plain}
 
+\usepackage[T2A,T1]{fontenc}
+\usepackage[russian,english]{babel}
 \usepackage{booktabs}
 \usepackage{CJKutf8}
 \newcommand{\zh}[1]{\begin{CJK}{UTF8}{bsmi}#1\end{CJK}}
@@ -109,12 +111,10 @@ mBERT convention. A whole run of characters as one token would leak the future: 
 non-Chinese character arrives, and 85\% of the Cantonese runs that end glued to a letter end at a switch.
 Punctuation is not a token; it is kept as context for the preceding token.
 
-\textbf{Token-level language ID.} The corpus gives only each row's two languages, so we tag every token with
-three rules: (1) script, when the two languages use different scripts; (2) for Latin-script pairs, word
-frequency from the \texttt{wordfreq} library~\cite{speer2022wordfreq}, an offline snapshot (up to about 2021)
-of Wikipedia, subtitle, news, book, web and social-media text: a word goes to the language where its Zipf
-frequency is at least 0.3 higher; (3) context, where undecided tokens (names, numbers, words
-shared by both languages) take the nearest decided neighbor's language. 56\% of Hindi--English rows are
+\textbf{Language ID resources.} The corpus gives only each row's two languages, so we derive a language for
+every token (Section~\ref{sec:labeling}). For Latin-script pairs we use the \texttt{wordfreq}
+library~\cite{speer2022wordfreq}, an offline snapshot (up to about 2021) of Wikipedia, subtitle, news, book,
+web and social-media text that gives each word a Zipf frequency per language. 56\% of Hindi--English rows are
 romanized, so we built a romanized-Hindi lexicon (1,056 words) from the corpus itself, using the Latin words
 in Devanagari rows as the English reference. Hindi is therefore reported as two strata, giving 16 evaluation
 strata. As a sanity check, our per-row share of second-language tokens correlates with the ratio estimated
@@ -122,27 +122,63 @@ by the corpus's own LLM judge (Pearson 0.47 to 0.60 for 13 pairs, 0.32 for Hindi
 300 rows per pair). Since that estimate is itself noisy, a hand-validation sample of 450 sentences (30 per
 pair) is prepared.
 
-\subsection{Labels and splits}
-$y_{sw}$ and $y_{dur}$ are derived from the token tags (Table~\ref{tab:example}); the last token of a sentence
-has no target. Unit tests check them on hand-worked sentences.
+\subsection{Labeling procedure}
+\label{sec:labeling}
+Every sentence goes through five steps; Table~\ref{tab:example} shows the output of our code on two sentences.
+\begin{enumerate}
+\item \textbf{Tokenize}: words, one token per Chinese character, one token per run of digits. Punctuation is
+not a token; it stays with the preceding token as context typed before the next one.
+\item \textbf{Script rule}: if the token's script belongs to only one of the row's two languages, it decides.
+\item \textbf{Frequency rule} (Latin-script pairs): the language whose \texttt{wordfreq} Zipf frequency is at
+least 0.3 higher wins; a word below 1.0 in both lists is unknown. Romanized Hindi rows use our lexicon.
+\item \textbf{Context rule}: tokens still undecided (numbers, unknown names, words frequent in both languages)
+take the language of the nearest decided token, preferring the left one.
+\item \textbf{Targets}: $y_{sw}(t)=1$ if the language of token $t+1$ differs from token $t$; then $y_{dur}(t)$
+is the bin (1--2, 3--6, 7+) of the run of same-language tokens starting at $t+1$. The last token and
+non-switch durations get no target ($-1$, ignored by the loss and the metrics).
+\end{enumerate}
+Labels may use the whole sentence (the context rule can look right); baseline features and model inputs never
+do. Names get no special label: a name in the other script (\emph{Marvel} in Russian text) or frequent in the
+other language's list counts as a switch, which the hand validation will quantify. Unit tests check every step
+on hand-worked sentences.
 
 \begin{table}[t]
-\caption{Labels for a Spanish--English sentence. The switch is predicted at \emph{s\'e}; the comma typed after
-it is part of the prefix.}
+\caption{Labeling output of our code on two sentences: the rule that decided each token, its language and the
+targets. The comma after \emph{2022} is part of the prefix at that token.}
 \label{tab:example}
 \small
-\setlength{\tabcolsep}{3.5pt}
-\begin{tabular}{lccccccc}
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{llccc}
 \toprule
-Token & Yo & no & s\'e, & but & I & think & so \\
+Token & Rule & Language & $y_{sw}$ & $y_{dur}$ \\
 \midrule
-Language & es & es & es & en & en & en & en \\
-$y_{sw}$ & 0 & 0 & \textbf{1} & 0 & 0 & 0 & -- \\
-$y_{dur}$ & -- & -- & \textbf{3--6} & -- & -- & -- & -- \\
+\multicolumn{5}{l}{\emph{Spanish--English: ``Vi a Messi en 2022, honestly the best game ever!''}} \\
+Vi & frequency & es & 0 & -- \\
+a & context (both lists) & es & 0 & -- \\
+Messi & context (unknown name) & es & 0 & -- \\
+en & frequency & es & 0 & -- \\
+2022, & context (number) & es & \textbf{1} & \textbf{3--6} \\
+honestly & frequency & en & 0 & -- \\
+the & frequency & en & 0 & -- \\
+best & frequency & en & 0 & -- \\
+game & frequency & en & 0 & -- \\
+ever & frequency & en & -- & -- \\
+\midrule
+\multicolumn{5}{l}{\emph{Russian--English: \foreignlanguage{russian}{``В прошлом году} Marvel
+\foreignlanguage{russian}{сняли фильм,} you know?''}} \\
+\foreignlanguage{russian}{В} & script & ru & 0 & -- \\
+\foreignlanguage{russian}{прошлом} & script & ru & 0 & -- \\
+\foreignlanguage{russian}{году} & script & ru & \textbf{1} & \textbf{1--2} \\
+Marvel & script (name) & en & \textbf{1} & \textbf{1--2} \\
+\foreignlanguage{russian}{сняли} & script & ru & 0 & -- \\
+\foreignlanguage{russian}{фильм,} & script & ru & \textbf{1} & \textbf{1--2} \\
+you & script & en & 0 & -- \\
+know & script & en & -- & -- \\
 \bottomrule
 \end{tabular}
 \end{table}
 
+\subsection{Splits}
 \begin{table}[t]
 \caption{Fixed splits, by conversation and stratified by stratum.}
 \label{tab:splits}
